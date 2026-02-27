@@ -131,31 +131,31 @@
 
     <script>
         function shortenUrl() {
-            const longUrl = document.getElementById('longUrl').value.trim();
+    const longUrl = document.getElementById("longUrl").value.trim();
 
-            if (!longUrl) {
-                showToast("❌ Please paste a link");
-                return;
+    if (!longUrl) {
+        showToast("❌ Please paste a link");
+        return;
+    }
+
+    fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.shorturl) {
+                const short = data.shorturl;
+                document.getElementById("shortUrl").href = short;
+                document.getElementById("shortUrl").textContent = short;
+                document.getElementById("resultBox").style.display = "flex";
+                showToast("✨ URL Shortened Successfully");
+            } else {
+                showToast("⚠️ Invalid URL");
             }
-
-            fetch(`https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(longUrl)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.ok) {
-                        const short = data.result.full_short_link;
-                        document.getElementById('shortUrl').href = short;
-                        document.getElementById('shortUrl').textContent = short;
-                        document.getElementById('resultBox').style.display = 'flex';
-                        showToast("✨ URL Shortened Successfully");
-                    } else {
-                        showToast("⚠️ Invalid URL");
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    showToast("❌ Something went wrong");
-                });
-        }
+        })
+        .catch(err => {
+            console.error(err);
+            showToast("❌ Something went wrong");
+        });
+}
         function copyUrl() {
             const text = document.getElementById('shortUrl').textContent;
             navigator.clipboard.writeText(text);
@@ -175,5 +175,6 @@
     </script>
 
 </body>
+
 
 </html>
